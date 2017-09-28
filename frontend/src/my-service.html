@@ -1,0 +1,56 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<dom-module id="my-service">
+    <script>
+    (function() {
+
+      class MyService extends Polymer.Element {
+
+        static get is() {
+          return 'my-service';
+        }
+
+        static get properties() {
+          return {
+            data: {
+              type: Object,
+              //computed: '_computeData()',
+              notify: true
+            }
+          };
+        }
+
+        ready() {
+          super.ready();
+          this._computeData();
+        }
+
+
+        _computeData() {
+
+         this._getResource({
+
+            url: 'http://localhost:8081/get/json',
+            onLoad(e) {
+                this.set('data', JSON.parse(e.target.responseText));
+            }
+          });
+
+
+        }
+
+        _getResource(rq) {
+          let xhr = new XMLHttpRequest();
+          xhr.addEventListener('load', rq.onLoad.bind(this));
+          xhr.open('GET', rq.url);
+          xhr.send();
+        }
+      }
+
+
+
+
+      customElements.define(MyService.is, MyService);
+
+    })();
+  </script>
+</dom-module>
